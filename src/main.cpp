@@ -8,9 +8,16 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	case WM_GETMINMAXINFO:
 		break;
 	case WM_CREATE:
+		win::g_win.init(hWnd);
+		break;
+	case WM_PAINT:
+		win::g_win.draw();
+		break;
+	case WM_SIZE:
+		win::g_win.resize(LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_DESTROY:
-		PostQuitMessage(0);
+		win::g_win.deinit();
 		break;
 	}
 
@@ -37,15 +44,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 		return 0;
 	}
 
-	win::g_win.init(hWnd);
-
 	MSG message;
-	while (GetMessage(&message, hWnd, 0, 0)) {
+	while (GetMessage(&message, hWnd, 0, 0) != 0) {
 		TranslateMessage(&message);
 		DispatchMessage(&message);
+		if (!win::g_win.is_animating()) {
+			break;
+		}
 	}
-
-	win::g_win.deinit();
 
 	return 0;
 }

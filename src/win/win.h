@@ -4,16 +4,21 @@
 #include "OpenGL/OpenGL.h"
 
 class win {
-public:
-	~win() = default;
-
-	void init(HWND hWnd);
-	void deinit();
 private:
 	win();
 
 	HWND m_hWnd{ nullptr };
 	OpenGL* m_openGL{ nullptr };
 public:
+	~win() = default;
+
+	void init(HWND hWnd);
+	void deinit();
+
+	void draw();
+	void resize(GLint w, GLint h);
+
+	bool is_animating();
+
 	static win g_win;
 };
