@@ -150,10 +150,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\math\matrix.cpp" />
+    <ClCompile Include="src\math\vec.cpp" />
     <ClCompile Include="src\OpenGL\OpenGL.cpp" />
     <ClCompile Include="src\win\win.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\math\matrix.h" />
+    <ClInclude Include="src\math\vec.h" />
     <ClInclude Include="src\OpenGL\OpenGL.h" />
     <ClInclude Include="src\win\win.h" />
   </ItemGroup>

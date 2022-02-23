@@ -19,6 +19,9 @@
     <Filter Include="Source Files\OpenGL">
       <UniqueIdentifier>{512feab5-171a-48ed-b3fe-c1e378e88907}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{86826abd-e189-44c0-b704-4f1fb9c9aa86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -30,6 +33,12 @@
     <ClCompile Include="src\OpenGL\OpenGL.cpp">
       <Filter>Source Files\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\math\vec.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\matrix.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\win\win.h">
@@ -37,6 +46,12 @@
     </ClInclude>
     <ClInclude Include="src\OpenGL\OpenGL.h">
       <Filter>Source Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\vec.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\matrix.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
