@@ -9,6 +9,8 @@ private:
 
 	HWND m_hWnd{ nullptr };
 	OpenGL* m_openGL{ nullptr };
+
+	bool m_is_closed{ false };
 public:
 	~win() = default;
 
@@ -18,7 +20,7 @@ public:
 	void draw();
 	void resize(GLint w, GLint h);
 
-	bool is_animating();
+	bool is_closed();
 
 	static win g_win;
 };

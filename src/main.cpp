@@ -45,12 +45,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 	}
 
 	MSG message;
-	while (GetMessage(&message, hWnd, 0, 0) != 0) {
+	while (true) {
+		PeekMessage(&message, hWnd, 0, 0, PM_REMOVE);
 		TranslateMessage(&message);
 		DispatchMessage(&message);
-		if (!win::g_win.is_animating()) {
+		if (win::g_win.is_closed()) {
 			break;
 		}
+		win::g_win.draw();
 	}
 
 	return 0;
