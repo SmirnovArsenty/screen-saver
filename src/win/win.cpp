@@ -10,8 +10,12 @@ void win::init(HWND hWnd) {
 	ShowWindow(m_hWnd, true);
 
 	m_openGL = new OpenGL(m_hWnd);
+	RECT rc;
+	GetWindowRect(hWnd, &rc);
 	m_is_closed = false;
-	m_openGL->update_data();
+	m_openGL->resize(rc.right - rc.left, rc.bottom - rc.top);
+	m_draw_helper = new DrawHelper(m_openGL);
+	//m_openGL->update_data();
 }
 
 void win::deinit() {
@@ -29,7 +33,9 @@ void win::draw() {
 }
 
 void win::resize(GLint w, GLint h) {
-	m_openGL->resize(w, h);
+	if (m_openGL != nullptr) {
+		m_openGL->resize(w, h);
+	}
 }
 
 bool win::is_closed() {

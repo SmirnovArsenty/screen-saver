@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Windows.h"
-#include "OpenGL/OpenGL.h"
+#include "OpenGL/DrawHelper.h"
 
 class win {
 private:
@@ -9,6 +9,7 @@ private:
 
 	HWND m_hWnd{ nullptr };
 	OpenGL* m_openGL{ nullptr };
+	DrawHelper* m_draw_helper{ nullptr };
 
 	bool m_is_closed{ false };
 public:

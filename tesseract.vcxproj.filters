@@ -39,6 +39,9 @@
     <ClCompile Include="src\math\matrix.cpp">
       <Filter>Source Files\math</Filter>
     </ClCompile>
+    <ClCompile Include="src\OpenGL\DrawHelper.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\win\win.h">
@@ -51,7 +54,18 @@
       <Filter>Source Files\math</Filter>
     </ClInclude>
     <ClInclude Include="src\math\matrix.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\math</Filter>
     </ClInclude>
+    <ClInclude Include="src\OpenGL\DrawHelper.h">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\fs.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\shaders\vs.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

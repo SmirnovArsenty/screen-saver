@@ -7,21 +7,24 @@
 #include <GL/GL.h>
 #include <GL/GLU.h>
 
+#include <cstdint>
+
 class OpenGL {
 private:
 	HGLRC m_hGLRC{ nullptr };
 
-	GLuint m_program;
-
-	GLuint m_vaoID[2];
-	GLuint m_vboID[3];
+	GLuint m_program{};
+	GLuint m_vaoID{};
+	GLuint m_vboID[2]{};
+	GLuint m_uboID{};
 
 	bool m_error_flag{ false };
+
+	GLfloat m_width{}, m_height{};
 public:
 	OpenGL(HWND);
 	~OpenGL();
 
-	void update_data();
 	void draw();
 	void resize(GLint w, GLint h);
 

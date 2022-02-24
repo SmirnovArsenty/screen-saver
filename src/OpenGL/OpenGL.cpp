@@ -1,4 +1,7 @@
 #include "OpenGL.h"
+#include <cassert>
+#include <vector>
+#include <fstream>
 
 OpenGL::OpenGL(HWND hWnd) {
 	HDC hDC = GetDC(hWnd);
@@ -38,7 +41,7 @@ OpenGL::OpenGL(HWND hWnd) {
 
 	int attribs[] = {
 		WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
-		WGL_CONTEXT_MINOR_VERSION_ARB, 1,
+		WGL_CONTEXT_MINOR_VERSION_ARB, 2,
 		WGL_CONTEXT_FLAGS_ARB, 0,
 		0
 	};
@@ -72,38 +75,48 @@ OpenGL::OpenGL(HWND hWnd) {
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	const char* vertex_shader_source = 
-R"(#version 140
+	{
+		std::ifstream vs_source("../res/shaders/vs.glsl");
+		std::string vs_source_str((std::istreambuf_iterator<char>(vs_source)),
+			std::istreambuf_iterator<char>());
+		const char* vs_source_ptr = vs_source_str.c_str();
+		glShaderSource(vertex_shader, 1, &vs_source_ptr, 0);
+	}
 
-in vec3 in_Position;
-in vec3 in_Color;
-out vec3 ex_Color;
+	{
+		std::ifstream fs_source("../res/shaders/fs.glsl");
+		std::string fs_source_str((std::istreambuf_iterator<char>(fs_source)),
+			std::istreambuf_iterator<char>());
+		const char* fs_source_ptr = fs_source_str.c_str();
+		glShaderSource(fragment_shader, 1, &fs_source_ptr, 0);
+	}
 
-void main(void)
-{
-	gl_Position = vec4(in_Position, 1.0);
-	ex_Color = in_Color;
-}
-)";
-	glShaderSource(vertex_shader, 1, &vertex_shader_source, 0);
-
-	const char* fragment_shader_source =
-R"(#version 140
-
-precision highp float; // needed only for version 1.30
-
-in  vec3 ex_Color;
-out vec4 out_Color;
-
-void main(void)
-{
-	out_Color = vec4(ex_Color,1.0);
-}
-)";
-	glShaderSource(fragment_shader, 1, &fragment_shader_source, 0);
-
+	GLint is_compiled = false;
 	glCompileShader(vertex_shader);
+	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &is_compiled);
+	if (!is_compiled) {
+		GLint maxLength = 0;
+		glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+		std::vector<GLchar> error_log(maxLength);
+		glGetShaderInfoLog(vertex_shader, maxLength, &maxLength, &error_log[0]);
+
+		OutputDebugStringA(&error_log[0]);
+		glDeleteShader(vertex_shader);
+	}
 	glCompileShader(fragment_shader);
+	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &is_compiled);
+	if (!is_compiled) {
+		GLint maxLength = 0;
+		glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+		std::vector<GLchar> error_log(maxLength);
+		glGetShaderInfoLog(fragment_shader, maxLength, &maxLength, &error_log[0]);
+
+		OutputDebugStringA(&error_log[0]);
+		glDeleteShader(fragment_shader);
+	}
+
 	glAttachShader(m_program, vertex_shader);
 	glAttachShader(m_program, fragment_shader);
 	glLinkProgram(m_program);
@@ -114,85 +127,32 @@ void main(void)
 
 	glUseProgram(m_program);
 
-	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glProgramUniform2f(m_program, 0, m_width, m_height);
 }
 
 OpenGL::~OpenGL() {
+	glDeleteVertexArrays(1, &m_vaoID);
+	glDeleteBuffers(2, m_vboID);
+	glDeleteBuffers(1, &m_uboID);
 	glDeleteProgram(m_program);
 
 	wglMakeCurrent(NULL, NULL);
 	wglDeleteContext(m_hGLRC);
 }
 
-void OpenGL::update_data() {
-	// First simple object
-	float* vert = new float[9];	// vertex array
-	float* col = new float[9];	// color array
-
-	vert[0] = -0.3; vert[1] = 0.5; vert[2] = -1.0;
-	vert[3] = -0.8; vert[4] = -0.5; vert[5] = -1.0;
-	vert[6] = 0.2; vert[7] = -0.5; vert[8] = -1.0;
-
-	col[0] = 1.0; col[1] = 0.0; col[2] = 0.0;
-	col[3] = 0.0; col[4] = 1.0; col[5] = 0.0;
-	col[6] = 0.0; col[7] = 0.0; col[8] = 1.0;
-
-	// Second simple object
-	float* vert2 = new float[9];	// vertex array
-
-	vert2[0] = -0.2; vert2[1] = 0.5; vert2[2] = -1.0;
-	vert2[3] = 0.3; vert2[4] = -0.5; vert2[5] = -1.0;
-	vert2[6] = 0.8; vert2[7] = 0.5; vert2[8] = -1.0;
-
-	// Two VAOs allocation
-	glGenVertexArrays(2, &m_vaoID[0]);
-
-	// First VAO setup
-	glBindVertexArray(m_vaoID[0]);
-
-	glGenBuffers(2, m_vboID);
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_vboID[0]);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), vert, GL_STATIC_DRAW);
-	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_vboID[1]);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), col, GL_STATIC_DRAW);
-	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(1);
-
-	// Second VAO setup	
-	glBindVertexArray(m_vaoID[1]);
-
-	glGenBuffers(1, &m_vboID[2]);
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_vboID[2]);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), vert2, GL_STATIC_DRAW);
-	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
-
-	glBindVertexArray(0);
-
-	delete[] vert;
-	delete[] vert2;
-	delete[] col;
-}
-
 void OpenGL::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBindVertexArray(m_vaoID[0]);		// select first VAO
+	glBindVertexArray(m_vaoID);		// select first VAO
 	glDrawArrays(GL_TRIANGLES, 0, 3);	// draw first object
-
-	glBindVertexArray(m_vaoID[1]);		// select second VAO
-	glVertexAttrib3f((GLuint)1, 1.0, 0.0, 0.0); // set constant color attribute
-	glDrawArrays(GL_TRIANGLES, 0, 3);	// draw second object
 
 	glBindVertexArray(0);
 }
 
 void OpenGL::resize(GLint w, GLint h) {
 	glViewport(0, 0, w, h);
+	m_width = (float)w;
+	m_height = (float)h;
 }
 
 bool OpenGL::is_error() {
