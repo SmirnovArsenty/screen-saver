@@ -25,8 +25,11 @@ public:
 	OpenGL(HWND);
 	~OpenGL();
 
-	void draw();
+	void clear();
 	void resize(GLint w, GLint h);
+
+	GLfloat width();
+	GLfloat height();
 
 	[[nodiscard]] bool is_error();
 };

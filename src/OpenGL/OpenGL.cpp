@@ -70,65 +70,7 @@ OpenGL::OpenGL(HWND hWnd) {
 		m_error_flag = true;
 	}
 
-	// initial contents
-	m_program = glCreateProgram();
-	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	{
-		std::ifstream vs_source("../res/shaders/vs.glsl");
-		std::string vs_source_str((std::istreambuf_iterator<char>(vs_source)),
-			std::istreambuf_iterator<char>());
-		const char* vs_source_ptr = vs_source_str.c_str();
-		glShaderSource(vertex_shader, 1, &vs_source_ptr, 0);
-	}
-
-	{
-		std::ifstream fs_source("../res/shaders/fs.glsl");
-		std::string fs_source_str((std::istreambuf_iterator<char>(fs_source)),
-			std::istreambuf_iterator<char>());
-		const char* fs_source_ptr = fs_source_str.c_str();
-		glShaderSource(fragment_shader, 1, &fs_source_ptr, 0);
-	}
-
-	GLint is_compiled = false;
-	glCompileShader(vertex_shader);
-	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &is_compiled);
-	if (!is_compiled) {
-		GLint maxLength = 0;
-		glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &maxLength);
-
-		std::vector<GLchar> error_log(maxLength);
-		glGetShaderInfoLog(vertex_shader, maxLength, &maxLength, &error_log[0]);
-
-		OutputDebugStringA(&error_log[0]);
-		glDeleteShader(vertex_shader);
-	}
-	glCompileShader(fragment_shader);
-	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &is_compiled);
-	if (!is_compiled) {
-		GLint maxLength = 0;
-		glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &maxLength);
-
-		std::vector<GLchar> error_log(maxLength);
-		glGetShaderInfoLog(fragment_shader, maxLength, &maxLength, &error_log[0]);
-
-		OutputDebugStringA(&error_log[0]);
-		glDeleteShader(fragment_shader);
-	}
-
-	glAttachShader(m_program, vertex_shader);
-	glAttachShader(m_program, fragment_shader);
-	glLinkProgram(m_program);
-	glDetachShader(m_program, vertex_shader);
-	glDetachShader(m_program, fragment_shader);
-	glDeleteShader(vertex_shader);
-	glDeleteShader(fragment_shader);
-
-	glUseProgram(m_program);
-
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	glProgramUniform2f(m_program, 0, m_width, m_height);
 }
 
 OpenGL::~OpenGL() {
@@ -141,18 +83,21 @@ OpenGL::~OpenGL() {
 	wglDeleteContext(m_hGLRC);
 }
 
-void OpenGL::draw() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glBindVertexArray(m_vaoID);		// select first VAO
-	glDrawArrays(GL_TRIANGLES, 0, 3);	// draw first object
-
-	glBindVertexArray(0);
+void OpenGL::clear() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 void OpenGL::resize(GLint w, GLint h) {
 	glViewport(0, 0, w, h);
 	m_width = (float)w;
 	m_height = (float)h;
+}
+
+GLfloat OpenGL::width() {
+	return m_width;
+}
+GLfloat OpenGL::height() {
+	return m_height;
 }
 
 bool OpenGL::is_error() {

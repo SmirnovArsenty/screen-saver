@@ -28,7 +28,7 @@ void win::draw() {
 	if (m_openGL == nullptr) {
 		return;
 	}
-	m_openGL->draw();
+	m_draw_helper->DrawScene();
 	SwapBuffers(GetDC(m_hWnd));
 }
 

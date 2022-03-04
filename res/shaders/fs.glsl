@@ -1,11 +1,7 @@
 #version 430
 
-layout(location = 0) uniform vec2 screen_size;
-
-out vec4 out_Color;
+out vec4 o_Color;
 
 void main(void) {
-	float x = gl_FragCoord.x / screen_size.x;
-	float y = gl_FragCoord.y / screen_size.y;
-	out_Color = vec4(x, y, 0.0 ,1.0);
+	o_Color = vec4(1.0, 1.0, 1.0 ,1.0);
 }

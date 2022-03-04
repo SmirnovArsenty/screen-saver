@@ -10,8 +10,10 @@ private:
 	float a[4][4]{};
 	matrix4x4() = default;
 public:
-	static matrix4x4 perspective(float right, float left, float top, float bottom, float near, float far);
+	static matrix4x4 perspective(float width, float height, float n, float f);
 	static matrix4x4 view(vec3 pos, vec3 at);
+
+	static vec3 projectVec4to3D(vec4 v, float distance = 2.f);
 
 	static matrix4x4 translate(vec3 v);
 	static matrix4x4 scale(float scale);
