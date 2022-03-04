@@ -4,13 +4,13 @@
 #include "matrix.h"
 #include <cmath>
 
-matrix4x4 matrix4x4::perspective(float width, float height, float n, float f) {
+matrix4x4 matrix4x4::perspective(float l, float r, float b, float t, float n, float f) {
 	matrix4x4 res;
 
-	res[0][0] = n / width;	res[1][0] = 0;			res[2][0] = 0;					res[3][0] = 0;
-	res[0][1] = 0;			res[1][1] = n / height;	res[2][1] = 0;					res[3][1] = 0;
-	res[0][2] = 0;			res[1][2] = 0;			res[2][2] = -(f + n) / (f - n);	res[3][2] = -(2 * f * n) / (f - n);
-	res[0][3] = 0;			res[1][3] = 0;			res[2][3] = -1;					res[3][3] = 0;
+	res[0][0] = 2*n/(r-l);	res[1][0] = 0;			res[2][0] = (r+l)/(r-l);	res[3][0] = 0;
+	res[0][1] = 0;			res[1][1] = 2*n/(t-b);	res[2][1] = (t+b)/(t-b);	res[3][1] = 0;
+	res[0][2] = 0;			res[1][2] = 0;			res[2][2] = -(f+n)/(f-n);	res[3][2] = -(2*f*n)/(f-n);
+	res[0][3] = 0;			res[1][3] = 0;			res[2][3] = -1;				res[3][3] = 0;
 
 	return res;
 }
@@ -18,7 +18,7 @@ matrix4x4 matrix4x4::perspective(float width, float height, float n, float f) {
 matrix4x4 matrix4x4::view(vec3 pos, vec3 at) {
 	matrix4x4 res;
 
-	vec3 up(0, 0, 1);
+	vec3 up(0, 1, 0);
 	vec3 forward = (at - pos).normalize();
 	vec3 right = (forward * up).normalize();
 	up = (right * forward).normalize();

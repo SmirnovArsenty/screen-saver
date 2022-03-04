@@ -85,18 +85,33 @@ void DrawHelper::DrawPoint(vec3 pos) {
 	glBindVertexArray(0);
 }
 void DrawHelper::DrawLine(vec3 v1, vec3 v2) {
+	float vert[] = { v1.x(), v1.y(), v1.z(), v2.x(), v2.y(), v2.z() };
 
+	glBindVertexArray(m_vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+	glBufferData(GL_ARRAY_BUFFER, _countof(vert) * sizeof(GLfloat), vert, GL_STREAM_DRAW);
+	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	glDrawArrays(GL_LINES, 0, 2);
+
+	glBindVertexArray(0);
 }
 void DrawHelper::DrawScene() {
 	m_engine->clear();
 	glPointSize(5.f);
+	glLineWidth(2.f);
 
 	// use program
 	glUseProgram(m_program);
 
 	// setup camera
-	matrix4x4 projection = matrix4x4::perspective(m_engine->width(), m_engine->height(), .5f, 10.f);
-	matrix4x4 view = matrix4x4::view({ 1.f, 1.f, 0.f }, { 0.f });
+	matrix4x4 projection = matrix4x4::perspective(
+		1.f, -1.f,
+		1.f, -1.f,
+		1.f, 100.f);
+	matrix4x4 view = matrix4x4::view({ 10.f, 0.f, 0.f }, { 0.f, 0.f, 0.f });
 	matrix4x4 VP = projection * view;
 	glUniformMatrix4fv(glGetUniformLocation(m_program, "VP"), 1, GL_FALSE, VP[0]);
 
@@ -123,12 +138,36 @@ void DrawHelper::DrawScene() {
 	vec3 pointsFrom4Dto3D[16];
 
 	for (uint32_t i = 0; i < _countof(points4D); ++i) {
-		vec4 rotated = matrix4x4::rotateZW((std::chrono::high_resolution_clock::now().time_since_epoch().count() * 0.001f)) * points4D[i];
+		float time = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+		float angle = time * 0.001f;
+		vec4 rotated = matrix4x4::rotateXY(angle) * matrix4x4::rotateZW(angle) * points4D[i];
 
 		pointsFrom4Dto3D[i] = matrix4x4::projectVec4to3D(rotated, 2.f);
 	}
 
+	// draw points
 	for (uint32_t i = 0; i < _countof(points4D); ++i) {
 		DrawPoint(pointsFrom4Dto3D[i]);
 	}
+	// draw lines
+	for (uint32_t i = 0; i < 2; ++i) {
+		DrawLine(pointsFrom4Dto3D[0 + 8 * i], pointsFrom4Dto3D[1 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[0 + 8 * i], pointsFrom4Dto3D[2 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[1 + 8 * i], pointsFrom4Dto3D[3 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[2 + 8 * i], pointsFrom4Dto3D[3 + 8 * i]);
+
+		DrawLine(pointsFrom4Dto3D[4 + 8 * i], pointsFrom4Dto3D[5 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[4 + 8 * i], pointsFrom4Dto3D[6 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[5 + 8 * i], pointsFrom4Dto3D[7 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[6 + 8 * i], pointsFrom4Dto3D[7 + 8 * i]);
+
+		DrawLine(pointsFrom4Dto3D[0 + 8 * i], pointsFrom4Dto3D[4 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[1 + 8 * i], pointsFrom4Dto3D[5 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[2 + 8 * i], pointsFrom4Dto3D[6 + 8 * i]);
+		DrawLine(pointsFrom4Dto3D[3 + 8 * i], pointsFrom4Dto3D[7 + 8 * i]);
+	}
+	for (uint32_t i = 0; i < 8; ++i) {
+		DrawLine(pointsFrom4Dto3D[i], pointsFrom4Dto3D[i + 8]);
+	}
+
 }
