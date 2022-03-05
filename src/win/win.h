@@ -18,7 +18,7 @@ public:
 	void init(HWND hWnd);
 	void deinit();
 
-	void draw();
+	void draw(HDC hDC);
 	void resize(GLint w, GLint h);
 
 	bool is_closed();

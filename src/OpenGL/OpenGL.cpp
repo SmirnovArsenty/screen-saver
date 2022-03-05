@@ -96,6 +96,8 @@ OpenGL::OpenGL(HWND hWnd) {
 		m_error_flag = true;
 	}
 
+	wglSwapIntervalEXT(0);
+
 	GL_CHECK(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
 
 	GL_CHECK(glGenFramebuffers(1, &m_framebuffer));
@@ -109,6 +111,8 @@ OpenGL::OpenGL(HWND hWnd) {
 		"res/shaders/blit_framebuffer/fs.glsl");
 
 	GL_CHECK(glEnable(GL_MULTISAMPLE));
+
+	ReleaseDC(hWnd, hDC);
 }
 
 OpenGL::~OpenGL() {
