@@ -190,7 +190,7 @@ void OpenGL::SwapBuffers(HDC hDC) {
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0));
 
 	::SwapBuffers(hDC);
-
+	return;
 	// calc fps
 	static auto last_time_fps = std::chrono::high_resolution_clock::now();
 	static int32_t fps = 0;
@@ -199,7 +199,6 @@ void OpenGL::SwapBuffers(HDC hDC) {
 
 	if (now - last_time_fps > std::chrono::seconds(1)) {
 		last_time_fps = now;
-		OutputDebugStringA(("FPS: " + std::to_string(fps) + "\n").c_str());
 		fps = 0;
 	}
 }

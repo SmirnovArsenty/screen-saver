@@ -93,7 +93,7 @@ void DrawHelper::DrawScene() {
 
 	static float angle = 0.f;
 	static auto last_time = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> diff = std::chrono::high_resolution_clock::now() - last_time;
+	std::chrono::duration<float> diff = std::chrono::high_resolution_clock::now() - last_time;
 	last_time = std::chrono::high_resolution_clock::now();
 	angle += .1f * diff.count();
 	matrix4x4 transform = matrix4x4::rotateXY(angle) * matrix4x4::rotateZW(angle);
