@@ -166,13 +166,8 @@
     <ClInclude Include="src\OpenGL\DrawHelper.h" />
     <ClInclude Include="src\OpenGL\OpenGL.h" />
     <ClInclude Include="src\OpenGL\shader\shader.h" />
+    <ClInclude Include="src\resources.h" />
     <ClInclude Include="src\win\win.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\shaders\blit_framebuffer\fs.glsl" />
-    <None Include="res\shaders\blit_framebuffer\vs.glsl" />
-    <None Include="res\shaders\default\fs.glsl" />
-    <None Include="res\shaders\default\vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

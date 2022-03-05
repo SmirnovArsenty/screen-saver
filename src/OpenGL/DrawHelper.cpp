@@ -4,14 +4,13 @@
 #include <chrono>
 #include <fstream>
 #include <vector>
+#include "resources.h"
 
 DrawHelper::DrawHelper(OpenGL* engine) : m_engine{ engine } {
 	GL_CHECK(glGenVertexArrays(1, &m_vao));
 	GL_CHECK(glGenBuffers(1, &m_vbo));
 
-	m_program = new shader(
-		"res/shaders/default/vs.glsl",
-		"res/shaders/default/fs.glsl");
+	m_program = new shader(IDS_SHADER_DEFAULT_VS, IDS_SHADER_DEFAULT_FS);
 }
 DrawHelper::~DrawHelper() {
 	if (m_program != nullptr) {

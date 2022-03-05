@@ -65,6 +65,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
+	win::g_win.set_instance(hInstance);
 	const wchar_t class_name[] = L"tesseract window class";
 	WNDCLASS wc{};
 	wc.lpfnWndProc = WinProc;
