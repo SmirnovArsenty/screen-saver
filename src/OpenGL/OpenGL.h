@@ -14,10 +14,14 @@
 void printGLerror(GLenum error);
 
 #define GL_CHECK(x) \
+x;
+
+#if 0
 do { \
 	x; \
 	GLenum error = glGetError(); \
 } while ((void)0, 0)
+#endif
 
 class OpenGL {
 private:
