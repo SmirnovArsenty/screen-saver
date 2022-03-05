@@ -2,12 +2,15 @@
 #include <cassert>
 
 win::win() {}
+HINSTANCE win::instance() { return m_hInstance;  }
+void win::set_instance(HINSTANCE hInstance) { m_hInstance = hInstance;  }
 
 void win::init(HWND hWnd) {
 	assert(m_hWnd == nullptr);
 	m_hWnd = hWnd;
 
-	ShowWindow(m_hWnd, true);
+	ShowWindow(m_hWnd, SW_SHOWNORMAL);
+	UpdateWindow(m_hWnd);
 
 	MONITORINFO monitor_info;
 	monitor_info.cbSize = sizeof(monitor_info);
@@ -32,15 +35,19 @@ void win::init(HWND hWnd) {
 void win::deinit() {
 	delete m_openGL;
 	m_openGL = nullptr;
+	delete m_draw_helper;
+	m_draw_helper = nullptr;
 	m_is_closed = true;
+	DestroyWindow(m_hWnd);
+	m_hWnd = nullptr;
 }
 
-void win::draw() {
+void win::draw(HDC hDC) {
 	if (m_openGL == nullptr) {
 		return;
 	}
 	m_draw_helper->DrawScene();
-	m_openGL->SwapBuffers(GetDC(m_hWnd));
+	m_openGL->SwapBuffers(hDC);
 }
 
 void win::resize(GLint w, GLint h) {

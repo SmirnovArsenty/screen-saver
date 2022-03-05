@@ -6,23 +6,34 @@ win win::g_win{};
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 	case WM_GETMINMAXINFO: {
-		break;
+		((MINMAXINFO*)lParam)->ptMaxTrackSize.y =
+			GetSystemMetrics(SM_CYMAXTRACK) +
+			GetSystemMetrics(SM_CYCAPTION) +
+			GetSystemMetrics(SM_CYMENU) +
+			GetSystemMetrics(SM_CYBORDER) * 2;
+		return 0;
 	}
 	case WM_CREATE: {
 		win::g_win.init(hWnd);
-		break;
+		return 0;
+	}
+	case WM_ERASEBKGND: {
+		return 0;
 	}
 	case WM_PAINT: {
-		win::g_win.draw();
-		break;
+		PAINTSTRUCT ps;
+		HDC hDC = BeginPaint(hWnd, &ps);
+		win::g_win.draw(hDC);
+		EndPaint(hWnd, &ps);
+		return 0;
 	}
 	case WM_SIZE: {
 		win::g_win.resize(LOWORD(lParam), HIWORD(lParam));
-		break;
+		return 0;
 	}
 	case WM_DESTROY: {
 		win::g_win.deinit();
-		break;
+		return 0;
 	}
 	case WM_MOUSEMOVE: {
 		int32_t x = LOWORD(lParam);
@@ -32,11 +43,21 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		if (x * 2 != (rc.right - rc.left) || y * 2 != (rc.bottom - rc.top)) {
 			win::g_win.deinit();
 		}
-		break;
+		return 0;
 	}
 	case WM_KEYDOWN: {
 		win::g_win.deinit();
-		break;
+		return 0;
+	}
+	case WM_TIMER: {
+		switch (wParam) {
+			case 0x239: {
+				HDC hDC = GetDC(hWnd);
+				win::g_win.draw(hDC);
+				ReleaseDC(hWnd, hDC);
+			}
+		}
+		return 0;
 	}
 	}
 
@@ -44,16 +65,21 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
+	win::g_win.set_instance(hInstance);
 	const wchar_t class_name[] = L"tesseract window class";
 	WNDCLASS wc{};
 	wc.lpfnWndProc = WinProc;
 	wc.hInstance = hInstance;
+	wc.style = CS_DBLCLKS | CS_VREDRAW | CS_HREDRAW;
+	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.lpszMenuName = NULL;
 	wc.lpszClassName = class_name;
-	wc.style = CS_DBLCLKS | CS_OWNDC;
 	RegisterClass(&wc);
 
 	HWND hWnd = CreateWindow(class_name,
-		L"tesseract", WS_POPUP,
+		L"tesseract", WS_POPUP | WS_VISIBLE,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, NULL,
@@ -63,15 +89,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 		return 0;
 	}
 
+	SetTimer(hWnd, 0x239, 1, nullptr);
+
 	MSG message;
 	while (true) {
-		PeekMessage(&message, hWnd, 0, 0, PM_REMOVE);
-		TranslateMessage(&message);
-		DispatchMessage(&message);
-		if (win::g_win.is_closed()) {
-			break;
+		if (PeekMessage(&message, hWnd, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&message);
+			DispatchMessage(&message);
+			if (win::g_win.is_closed()) {
+				KillTimer(hWnd, 0x239);
+				break;
+			}
+		} else {
+			HDC hDC = GetDC(hWnd);
+			win::g_win.draw(hDC);
+			ReleaseDC(hWnd, hDC);
 		}
-		win::g_win.draw();
 	}
 
 	return 0;
