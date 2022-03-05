@@ -19,6 +19,18 @@
     <Filter Include="Source Files\OpenGL">
       <UniqueIdentifier>{512feab5-171a-48ed-b3fe-c1e378e88907}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{86826abd-e189-44c0-b704-4f1fb9c9aa86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\default">
+      <UniqueIdentifier>{a2fdf6aa-6a8e-419f-af77-4f2407cbfa32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\blit framebuffer">
+      <UniqueIdentifier>{4210041b-4cd3-477e-b28e-91465fb27e6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OpenGL\shader">
+      <UniqueIdentifier>{00e73474-489c-40f6-a3c1-32ec2e9e8eb2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -30,6 +42,18 @@
     <ClCompile Include="src\OpenGL\OpenGL.cpp">
       <Filter>Source Files\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\math\vec.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\matrix.cpp">
+      <Filter>Source Files\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenGL\DrawHelper.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OpenGL\shader\shader.cpp">
+      <Filter>Source Files\OpenGL\shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\win\win.h">
@@ -38,5 +62,31 @@
     <ClInclude Include="src\OpenGL\OpenGL.h">
       <Filter>Source Files\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\math\vec.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\matrix.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenGL\DrawHelper.h">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpenGL\shader\shader.h">
+      <Filter>Source Files\OpenGL\shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\default\fs.glsl">
+      <Filter>Resource Files\default</Filter>
+    </None>
+    <None Include="res\shaders\default\vs.glsl">
+      <Filter>Resource Files\default</Filter>
+    </None>
+    <None Include="res\shaders\blit_framebuffer\fs.glsl">
+      <Filter>Resource Files\blit framebuffer</Filter>
+    </None>
+    <None Include="res\shaders\blit_framebuffer\vs.glsl">
+      <Filter>Resource Files\blit framebuffer</Filter>
+    </None>
   </ItemGroup>
 </Project>

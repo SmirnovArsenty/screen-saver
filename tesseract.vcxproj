@@ -89,7 +89,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)ThirdParty\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,12 +121,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)ThirdParty\GLEW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;glew32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ThirdParty\GLEW\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,12 +150,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\math\matrix.cpp" />
+    <ClCompile Include="src\math\vec.cpp" />
+    <ClCompile Include="src\OpenGL\DrawHelper.cpp" />
     <ClCompile Include="src\OpenGL\OpenGL.cpp" />
+    <ClCompile Include="src\OpenGL\shader\shader.cpp" />
     <ClCompile Include="src\win\win.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\math\matrix.h" />
+    <ClInclude Include="src\math\vec.h" />
+    <ClInclude Include="src\OpenGL\DrawHelper.h" />
     <ClInclude Include="src\OpenGL\OpenGL.h" />
+    <ClInclude Include="src\OpenGL\shader\shader.h" />
     <ClInclude Include="src\win\win.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\blit_framebuffer\fs.glsl" />
+    <None Include="res\shaders\blit_framebuffer\vs.glsl" />
+    <None Include="res\shaders\default\fs.glsl" />
+    <None Include="res\shaders\default\vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
