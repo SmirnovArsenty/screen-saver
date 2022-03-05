@@ -32,6 +32,9 @@ vec3 vec3::operator*(vec3 v) {
 		m_x * v.m_y - m_y * v.m_x
 	};
 }
+vec3 vec3::operator-() {
+	return { -m_x, -m_y, -m_z };
+}
 
 vec4::vec4(float x, float y, float z, float w) : m_x{ x }, m_y{ y }, m_z{ z }, m_w{ w } {}
 vec4::vec4(float x) : m_x{ x }, m_y{ x }, m_z{ x }, m_w{ x } {}

@@ -23,6 +23,7 @@ public:
 	vec3& operator+=(vec3 v);
 	vec3& operator-=(vec3 v);
 	vec3 operator*(vec3 v);
+	vec3 operator-();
 };
 
 class vec4 {

@@ -9,14 +9,25 @@
 
 #include <cstdint>
 
+#include "shader/shader.h"
+
+void printGLerror(GLenum error);
+
+#define GL_CHECK(x) \
+do { \
+	x; \
+	GLenum error = glGetError(); \
+} while ((void)0, 0)
+
 class OpenGL {
 private:
 	HGLRC m_hGLRC{ nullptr };
 
-	GLuint m_program{};
-	GLuint m_vaoID{};
-	GLuint m_vboID[2]{};
-	GLuint m_uboID{};
+	GLuint m_vao{};
+	GLuint m_vbo{};
+	GLuint m_framebuffer{};
+	GLuint m_rendertarget{};
+	shader* m_swapbuf_program{ nullptr };
 
 	bool m_error_flag{ false };
 
@@ -27,6 +38,7 @@ public:
 
 	void clear();
 	void resize(GLint w, GLint h);
+	void SwapBuffers(HDC hDC);
 
 	GLfloat width();
 	GLfloat height();

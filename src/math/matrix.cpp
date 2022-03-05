@@ -16,19 +16,29 @@ matrix4x4 matrix4x4::perspective(float l, float r, float b, float t, float n, fl
 }
 
 matrix4x4 matrix4x4::view(vec3 pos, vec3 at) {
-	matrix4x4 res;
+	matrix4x4 rot;
 
 	vec3 up(0, 1, 0);
 	vec3 forward = (at - pos).normalize();
 	vec3 right = (forward * up).normalize();
 	up = (right * forward).normalize();
 
-	res[0][0] = right.x();	res[1][0] = up.x();	res[2][0] = forward.x();	res[3][0] = pos.x();
-	res[0][1] = right.y();	res[1][1] = up.y();	res[2][1] = forward.y();	res[3][1] = pos.y();
-	res[0][2] = right.z();	res[1][2] = up.z();	res[2][2] = forward.z();	res[3][2] = pos.z();
-	res[0][3] = 0;			res[1][3] = 0;		res[2][3] = 0;				res[3][3] = 1;
+	rot[0][0] = right.x();	rot[1][0] = up.x();	rot[2][0] = forward.x();	rot[3][0] = 0;
+	rot[0][1] = right.y();	rot[1][1] = up.y();	rot[2][1] = forward.y();	rot[3][1] = 0;
+	rot[0][2] = right.z();	rot[1][2] = up.z();	rot[2][2] = forward.z();	rot[3][2] = 0;
+	rot[0][3] = 0;			rot[1][3] = 0;		rot[2][3] = 0;				rot[3][3] = 1;
 
-	return res;
+	matrix4x4 translate;
+
+	translate[0][0] = 1;
+	translate[1][1] = 1;
+	translate[2][2] = 1;
+	translate[3][3] = 1;
+	translate[3][0] = pos.x();
+	translate[3][1] = pos.y();
+	translate[3][2] = pos.z();
+
+	return rot * translate;
 }
 
 vec3 matrix4x4::projectVec4to3D(vec4 v, float distance) {

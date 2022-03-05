@@ -3,6 +3,31 @@
 #include <vector>
 #include <fstream>
 
+void printGLerror(GLenum error, const char* file, int line) {
+	if (error == 0) {
+		return;
+	}
+	std::string file_line = file;
+	file_line += ":" + std::to_string(line) + " ";
+	switch (error) {
+		case GL_INVALID_ENUM:
+			OutputDebugStringA((file_line + "GL_INVALID_ENUM").c_str());
+			break;
+		case GL_INVALID_VALUE:
+			OutputDebugStringA((file_line + "GL_INVALID_VALUE").c_str());
+			break;
+		case GL_INVALID_OPERATION:
+			OutputDebugStringA((file_line + "GL_INVALID_OPERATION").c_str());
+			break;
+		case GL_INVALID_FRAMEBUFFER_OPERATION:
+			OutputDebugStringA((file_line + "GL_INVALID_FRAMEBUFFER_OPERATION").c_str());
+			break;
+		case GL_OUT_OF_MEMORY:
+			OutputDebugStringA((file_line + "GL_OUT_OF_MEMORY").c_str());
+			break;
+	}
+}
+
 OpenGL::OpenGL(HWND hWnd) {
 	HDC hDC = GetDC(hWnd);
 
@@ -63,34 +88,103 @@ OpenGL::OpenGL(HWND hWnd) {
 
 	//Or better yet, use the GL3 way to get the version number
 	int OpenGLVersion[2];
-	glGetIntegerv(GL_MAJOR_VERSION, &OpenGLVersion[0]);
-	glGetIntegerv(GL_MINOR_VERSION, &OpenGLVersion[1]);
+	GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &OpenGLVersion[0]));
+	GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &OpenGLVersion[1]));
 
 	if (!m_hGLRC) {
 		m_error_flag = true;
 	}
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	GL_CHECK(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
+
+	GL_CHECK(glGenFramebuffers(1, &m_framebuffer));
+	GL_CHECK(glGenTextures(1, &m_rendertarget));
+
+	GL_CHECK(glGenVertexArrays(1, &m_vao));
+	GL_CHECK(glGenBuffers(1, &m_vbo));
+
+	m_swapbuf_program = new shader(
+		"../res/shaders/blit_framebuffer/vs.glsl",
+		"../res/shaders/blit_framebuffer/fs.glsl");
+
+	GL_CHECK(glEnable(GL_MULTISAMPLE));
 }
 
 OpenGL::~OpenGL() {
-	glDeleteVertexArrays(1, &m_vaoID);
-	glDeleteBuffers(2, m_vboID);
-	glDeleteBuffers(1, &m_uboID);
-	glDeleteProgram(m_program);
+	if (m_swapbuf_program != nullptr) {
+		delete m_swapbuf_program;
+		m_swapbuf_program = nullptr;
+	}
+
+	GL_CHECK(glDeleteBuffers(1, &m_vbo));
+	GL_CHECK(glDeleteVertexArrays(1, &m_vao));
+	if (m_rendertarget != 0) {
+		GL_CHECK(glDeleteTextures(1, &m_rendertarget));
+	}
+	GL_CHECK(glDeleteFramebuffers(1, &m_framebuffer));
 
 	wglMakeCurrent(NULL, NULL);
 	wglDeleteContext(m_hGLRC);
 }
 
 void OpenGL::clear() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_framebuffer));
+	GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 
 void OpenGL::resize(GLint w, GLint h) {
-	glViewport(0, 0, w, h);
+	GL_CHECK(glViewport(0, 0, w, h));
 	m_width = (float)w;
 	m_height = (float)h;
+
+	if (m_rendertarget != 0) {
+		GL_CHECK(glDeleteTextures(1, &m_rendertarget));
+		m_rendertarget = 0;
+	}
+	GL_CHECK(glGenTextures(1, &m_rendertarget));
+
+	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_framebuffer));
+	GL_CHECK(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_rendertarget));
+	GL_CHECK(glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, w, h, GL_TRUE));
+
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+	GL_CHECK(glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_rendertarget, 0));
+
+	GL_CHECK(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0));
+	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+
+	GLenum buf[] = { GL_COLOR_ATTACHMENT0 };
+	GL_CHECK(glDrawBuffers(1, buf));
+}
+void OpenGL::SwapBuffers(HDC hDC) {
+	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+	m_swapbuf_program->use();
+
+	GL_CHECK(glUniform2f(m_swapbuf_program->getUniformLocation("screenSize"), m_width, m_height));
+
+	GL_CHECK(glActiveTexture(GL_TEXTURE0));
+	GL_CHECK(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_rendertarget));
+	GL_CHECK(glBindVertexArray(m_vao));
+	GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
+	GLfloat vert[] = {
+		-1.0f,  1.0f,
+		-1.0f, -1.0f,
+		 1.0f, -1.0f,
+
+		-1.0f,  1.0f,
+		 1.0f, -1.0f,
+		 1.0f,  1.0f
+	};
+	GL_CHECK(glBufferData(GL_ARRAY_BUFFER, _countof(vert) * sizeof(GLfloat), vert, GL_STATIC_DRAW));
+	GL_CHECK(glVertexAttribPointer((GLuint)0, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 2, nullptr));
+	GL_CHECK(glEnableVertexAttribArray(0));
+	GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 6));
+	GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GL_CHECK(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0));
+
+	::SwapBuffers(hDC);
 }
 
 GLfloat OpenGL::width() {

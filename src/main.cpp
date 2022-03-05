@@ -5,20 +5,39 @@ win win::g_win{};
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
-	case WM_GETMINMAXINFO:
+	case WM_GETMINMAXINFO: {
 		break;
-	case WM_CREATE:
+	}
+	case WM_CREATE: {
 		win::g_win.init(hWnd);
 		break;
-	case WM_PAINT:
+	}
+	case WM_PAINT: {
 		win::g_win.draw();
 		break;
-	case WM_SIZE:
+	}
+	case WM_SIZE: {
 		win::g_win.resize(LOWORD(lParam), HIWORD(lParam));
 		break;
-	case WM_DESTROY:
+	}
+	case WM_DESTROY: {
 		win::g_win.deinit();
 		break;
+	}
+	case WM_MOUSEMOVE: {
+		int32_t x = LOWORD(lParam);
+		int32_t y = HIWORD(lParam);
+		RECT rc;
+		GetWindowRect(hWnd, &rc);
+		if (x * 2 != (rc.right - rc.left) || y * 2 != (rc.bottom - rc.top)) {
+			win::g_win.deinit();
+		}
+		break;
+	}
+	case WM_KEYDOWN: {
+		win::g_win.deinit();
+		break;
+	}
 	}
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
@@ -34,7 +53,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 	RegisterClass(&wc);
 
 	HWND hWnd = CreateWindow(class_name,
-		L"tesseract", WS_OVERLAPPEDWINDOW,
+		L"tesseract", WS_POPUP,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT,
 		NULL, NULL,

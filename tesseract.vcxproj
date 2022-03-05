@@ -154,6 +154,7 @@
     <ClCompile Include="src\math\vec.cpp" />
     <ClCompile Include="src\OpenGL\DrawHelper.cpp" />
     <ClCompile Include="src\OpenGL\OpenGL.cpp" />
+    <ClCompile Include="src\OpenGL\shader\shader.cpp" />
     <ClCompile Include="src\win\win.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -161,21 +162,14 @@
     <ClInclude Include="src\math\vec.h" />
     <ClInclude Include="src\OpenGL\DrawHelper.h" />
     <ClInclude Include="src\OpenGL\OpenGL.h" />
+    <ClInclude Include="src\OpenGL\shader\shader.h" />
     <ClInclude Include="src\win\win.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\fs.glsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="res\shaders\vs.glsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </None>
+    <None Include="res\shaders\blit_framebuffer\fs.glsl" />
+    <None Include="res\shaders\blit_framebuffer\vs.glsl" />
+    <None Include="res\shaders\default\fs.glsl" />
+    <None Include="res\shaders\default\vs.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
