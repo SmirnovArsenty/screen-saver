@@ -2,6 +2,7 @@
 #include <cassert>
 #include <vector>
 #include <fstream>
+#include <chrono>
 
 void printGLerror(GLenum error, const char* file, int line) {
 	if (error == 0) {
@@ -104,8 +105,8 @@ OpenGL::OpenGL(HWND hWnd) {
 	GL_CHECK(glGenBuffers(1, &m_vbo));
 
 	m_swapbuf_program = new shader(
-		"../res/shaders/blit_framebuffer/vs.glsl",
-		"../res/shaders/blit_framebuffer/fs.glsl");
+		"res/shaders/blit_framebuffer/vs.glsl",
+		"res/shaders/blit_framebuffer/fs.glsl");
 
 	GL_CHECK(glEnable(GL_MULTISAMPLE));
 }
@@ -129,7 +130,7 @@ OpenGL::~OpenGL() {
 
 void OpenGL::clear() {
 	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_framebuffer));
-	GL_CHECK(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	GL_CHECK(glClear(GL_COLOR_BUFFER_BIT));
 }
 
 void OpenGL::resize(GLint w, GLint h) {
@@ -185,6 +186,18 @@ void OpenGL::SwapBuffers(HDC hDC) {
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0));
 
 	::SwapBuffers(hDC);
+
+	// calc fps
+	static auto last_time_fps = std::chrono::high_resolution_clock::now();
+	static int32_t fps = 0;
+	++fps;
+	auto now = std::chrono::high_resolution_clock::now();
+
+	if (now - last_time_fps > std::chrono::seconds(1)) {
+		last_time_fps = now;
+		OutputDebugStringA(("FPS: " + std::to_string(fps) + "\n").c_str());
+		fps = 0;
+	}
 }
 
 GLfloat OpenGL::width() {
