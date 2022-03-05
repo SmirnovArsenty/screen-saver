@@ -108,7 +108,7 @@ OpenGL::OpenGL(HWND hWnd) {
 	GL_CHECK(glGenVertexArrays(1, &m_vao));
 	GL_CHECK(glGenBuffers(1, &m_vbo));
 
-	m_swapbuf_program = new shader(IDS_SHADER_BLIT_VS, IDS_SHADER_BLIT_VS);
+	m_swapbuf_program = new shader(IDS_SHADER_BLIT_VS, IDS_SHADER_BLIT_FS);
 
 	GL_CHECK(glEnable(GL_MULTISAMPLE));
 
