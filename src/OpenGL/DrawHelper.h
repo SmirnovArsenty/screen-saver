@@ -13,8 +13,8 @@ private:
 	GLuint m_vao;
 	GLuint m_vbo;
 
-	GLfloat m_line_width{ 1 };
-	GLfloat m_point_size{ 1 };
+	GLfloat m_line_width{ 7.f };
+	GLfloat m_point_size{ 7.f };
 
 	void DrawPoint(vec3 pos);
 	void DrawLine(vec3 v1, vec3 v2);

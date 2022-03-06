@@ -7,7 +7,7 @@ class win {
 private:
 	win();
 
-	HINSTANCE m_hInstance;
+	HINSTANCE m_hInstance{ nullptr };
 	HWND m_hWnd{ nullptr };
 	OpenGL* m_openGL{ nullptr };
 	DrawHelper* m_draw_helper{ nullptr };
