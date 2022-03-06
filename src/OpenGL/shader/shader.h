@@ -7,7 +7,7 @@
 class shader {
 	GLuint m_program;
 public:
-	shader(const std::string vs, const std::string fs);
+	shader(int32_t vsID, int32_t fsID);
 	~shader();
 
 	void use() const;

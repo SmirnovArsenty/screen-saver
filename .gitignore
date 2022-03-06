@@ -1,6 +1,16 @@
 .vs/
-x64/
-Debug/
-Release/
+./Debug/
+./Release/
 
+*.tlog/
+*.obj
+*.iobj
+*.log
+*.idb
+*.ipdb
+*.pdb
+*.exe
+*.exe.recipe
+*.ilk
+*.FileListAbsolute.txt
 *.user

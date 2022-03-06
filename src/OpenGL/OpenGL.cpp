@@ -4,6 +4,8 @@
 #include <fstream>
 #include <chrono>
 
+#include "resources.h"
+
 void printGLerror(GLenum error, const char* file, int line) {
 	if (error == 0) {
 		return;
@@ -106,9 +108,7 @@ OpenGL::OpenGL(HWND hWnd) {
 	GL_CHECK(glGenVertexArrays(1, &m_vao));
 	GL_CHECK(glGenBuffers(1, &m_vbo));
 
-	m_swapbuf_program = new shader(
-		"res/shaders/blit_framebuffer/vs.glsl",
-		"res/shaders/blit_framebuffer/fs.glsl");
+	m_swapbuf_program = new shader(IDS_SHADER_BLIT_VS, IDS_SHADER_BLIT_FS);
 
 	GL_CHECK(glEnable(GL_MULTISAMPLE));
 
@@ -189,8 +189,9 @@ void OpenGL::SwapBuffers(HDC hDC) {
 	GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0));
 
+	GL_CHECK(glFinish());
 	::SwapBuffers(hDC);
-
+	return;
 	// calc fps
 	static auto last_time_fps = std::chrono::high_resolution_clock::now();
 	static int32_t fps = 0;

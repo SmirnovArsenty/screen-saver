@@ -2,6 +2,8 @@
 #include <cassert>
 
 win::win() {}
+HINSTANCE win::instance() { return m_hInstance;  }
+void win::set_instance(HINSTANCE hInstance) { m_hInstance = hInstance;  }
 
 void win::init(HWND hWnd) {
 	assert(m_hWnd == nullptr);

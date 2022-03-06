@@ -36,6 +36,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		return 0;
 	}
 	case WM_MOUSEMOVE: {
+		return 0;
 		int32_t x = LOWORD(lParam);
 		int32_t y = HIWORD(lParam);
 		RECT rc;
@@ -46,17 +47,8 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		return 0;
 	}
 	case WM_KEYDOWN: {
-		win::g_win.deinit();
 		return 0;
-	}
-	case WM_TIMER: {
-		switch (wParam) {
-			case 0x239: {
-				HDC hDC = GetDC(hWnd);
-				win::g_win.draw(hDC);
-				ReleaseDC(hWnd, hDC);
-			}
-		}
+		win::g_win.deinit();
 		return 0;
 	}
 	}
@@ -65,6 +57,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
+	win::g_win.set_instance(hInstance);
 	const wchar_t class_name[] = L"tesseract window class";
 	WNDCLASS wc{};
 	wc.lpfnWndProc = WinProc;
@@ -88,15 +81,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 		return 0;
 	}
 
-	SetTimer(hWnd, 0x239, 1, nullptr);
-
 	MSG message;
 	while (true) {
 		if (PeekMessage(&message, hWnd, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 			if (win::g_win.is_closed()) {
-				KillTimer(hWnd, 0x239);
 				break;
 			}
 		} else {

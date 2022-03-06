@@ -4,14 +4,13 @@
 #include <chrono>
 #include <fstream>
 #include <vector>
+#include "resources.h"
 
 DrawHelper::DrawHelper(OpenGL* engine) : m_engine{ engine } {
 	GL_CHECK(glGenVertexArrays(1, &m_vao));
 	GL_CHECK(glGenBuffers(1, &m_vbo));
 
-	m_program = new shader(
-		"res/shaders/default/vs.glsl",
-		"res/shaders/default/fs.glsl");
+	m_program = new shader(IDS_SHADER_DEFAULT_VS, IDS_SHADER_DEFAULT_FS);
 }
 DrawHelper::~DrawHelper() {
 	if (m_program != nullptr) {
@@ -53,8 +52,8 @@ void DrawHelper::DrawLine(vec3 v1, vec3 v2) {
 }
 void DrawHelper::DrawScene() {
 	m_engine->clear();
-	GL_CHECK(glPointSize(5.f));
-	GL_CHECK(glLineWidth(2.f));
+	GL_CHECK(glPointSize(m_point_size));
+	GL_CHECK(glLineWidth(m_line_width));
 
 	// use program
 	m_program->use();
@@ -93,10 +92,10 @@ void DrawHelper::DrawScene() {
 
 	static float angle = 0.f;
 	static auto last_time = std::chrono::high_resolution_clock::now();
-	std::chrono::duration<double> diff = std::chrono::high_resolution_clock::now() - last_time;
+	std::chrono::duration<float> diff = std::chrono::high_resolution_clock::now() - last_time;
 	last_time = std::chrono::high_resolution_clock::now();
 	angle += .1f * diff.count();
-	matrix4x4 transform = matrix4x4::rotateXY(angle) * matrix4x4::rotateZW(angle);
+	matrix4x4 transform = matrix4x4::rotateXY(angle * 0.7f) * matrix4x4::rotateZW(angle * 0.3f);
 	for (uint32_t i = 0; i < _countof(points4D); ++i) {
 		vec4 rotated = transform * points4D[i];
 		pointsFrom4Dto3D[i] = matrix4x4::projectVec4to3D(rotated, 2.f);
