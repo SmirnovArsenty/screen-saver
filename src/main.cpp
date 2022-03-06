@@ -49,16 +49,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		win::g_win.deinit();
 		return 0;
 	}
-	case WM_TIMER: {
-		switch (wParam) {
-			case 0x239: {
-				HDC hDC = GetDC(hWnd);
-				win::g_win.draw(hDC);
-				ReleaseDC(hWnd, hDC);
-			}
-		}
-		return 0;
-	}
 	}
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
@@ -89,15 +79,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 		return 0;
 	}
 
-	SetTimer(hWnd, 0x239, 1, nullptr);
-
 	MSG message;
 	while (true) {
 		if (PeekMessage(&message, hWnd, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 			if (win::g_win.is_closed()) {
-				KillTimer(hWnd, 0x239);
 				break;
 			}
 		} else {

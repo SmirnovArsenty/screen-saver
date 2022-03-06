@@ -137,11 +137,15 @@ matrix4x4 matrix4x4::operator*(matrix4x4 mat) {
 }
 
 vec4 matrix4x4::operator*(vec4 v) {
+	float* a0 = a[0];
+	float* a1 = a[1];
+	float* a2 = a[2];
+	float* a3 = a[3];
 	vec4 res = {
-		v.x() * a[0][0] + v.y() * a[1][0] + v.z() * a[2][0] + v.w() * a[3][0],
-		v.x() * a[0][1] + v.y() * a[1][1] + v.z() * a[2][1] + v.w() * a[3][1],
-		v.x() * a[0][2] + v.y() * a[1][2] + v.z() * a[2][2] + v.w() * a[3][2],
-		v.x() * a[0][3] + v.y() * a[1][3] + v.z() * a[2][3] + v.w() * a[3][3]
+		v.x() * a0[0] + v.y() * a1[0] + v.z() * a2[0] + v.w() * a3[0],
+		v.x() * a0[1] + v.y() * a1[1] + v.z() * a2[1] + v.w() * a3[1],
+		v.x() * a0[2] + v.y() * a1[2] + v.z() * a2[2] + v.w() * a3[2],
+		v.x() * a0[3] + v.y() * a1[3] + v.z() * a2[3] + v.w() * a3[3]
 	};
 	return res;
 }
