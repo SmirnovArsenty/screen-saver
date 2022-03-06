@@ -78,7 +78,7 @@ void main(void) {
 	vec2 coord;
 	coord.x = gl_FragCoord.x / screen_size.x;
 	coord.y = gl_FragCoord.y / screen_size.y;
-	o_Color = vec4(coord.x, coord.y, coord.x * sin(coord.y) * sin(coord.y),1.0);
+	o_Color = vec4(coord.x, coord.y, 1 - (coord.x + coord.y) / 2,1.0);
 }
 )";
 		}
