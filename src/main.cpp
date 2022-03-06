@@ -36,7 +36,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		return 0;
 	}
 	case WM_MOUSEMOVE: {
-		return 0;
 		int32_t x = LOWORD(lParam);
 		int32_t y = HIWORD(lParam);
 		RECT rc;
@@ -47,7 +46,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		return 0;
 	}
 	case WM_KEYDOWN: {
-		return 0;
 		win::g_win.deinit();
 		return 0;
 	}
