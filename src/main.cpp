@@ -49,6 +49,12 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		win::g_win.deinit();
 		return 0;
 	}
+	case WM_TIMER: {
+		if (wParam == 0x71334) {
+			win::g_win.draw(GetDC(hWnd));
+			return 0;
+		}
+	}
 	}
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
@@ -79,6 +85,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 		return 0;
 	}
 
+	SetTimer(hWnd, 0x71334, 1, nullptr);
+
 	MSG message;
 	while (true) {
 		if (PeekMessage(&message, hWnd, 0, 0, PM_REMOVE)) {
@@ -93,6 +101,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 			ReleaseDC(hWnd, hDC);
 		}
 	}
+
+	KillTimer(hWnd, 0x71334);
 
 	return 0;
 }
