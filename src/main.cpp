@@ -1,5 +1,8 @@
 #include <Windows.h>
+#include <powrprof.h>
 #include "win/win.h"
+
+#pragma comment(lib, "powrprof.lib")
 
 win win::g_win{};
 
@@ -86,6 +89,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char*, int) {
 	}
 
 	SetTimer(hWnd, 0x71334, 1, nullptr);
+
+	// setup high performance power plan
+	PowerSetActiveScheme(0, &GUID_MIN_POWER_SAVINGS);
 
 	MSG message;
 	while (true) {
