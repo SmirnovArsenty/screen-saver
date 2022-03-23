@@ -101,7 +101,7 @@ void DrawHelper::DrawScene() {
 	std::chrono::duration<float> diff = std::chrono::high_resolution_clock::now() - last_time;
 	last_time = std::chrono::high_resolution_clock::now();
 	angle += .1f * diff.count();
-	matrix4x4 transform = matrix4x4::rotateXY(angle * 0.7f) * matrix4x4::rotateZW(angle * 0.3f);
+	matrix4x4 transform = matrix4x4::rotateXY(angle * 0.852f) * matrix4x4::rotateZW(angle * 0.583f);
 	for (uint32_t i = 0; i < _countof(points4D); ++i) {
 		vec4 rotated = transform * points4D[i];
 		pointsFrom4Dto3D[i] = matrix4x4::projectVec4to3D(rotated, 2.f);

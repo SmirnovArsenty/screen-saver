@@ -349,8 +349,7 @@ BOOL WINAPI RegisterDialogClasses(HANDLE hInst) {
 	return TRUE;
 }
 
-int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpszCmdLine, int iCmdShow)
-{
+int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpszCmdLine, int iCmdShow) {
 	char* pch;
 	HWND hWnd = (HWND)INVALID_HANDLE_VALUE;
 	OSVERSIONINFOEX osvi;
@@ -359,7 +358,6 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpszCmdLi
 	osvi.dwPlatformId = VER_PLATFORM_WIN32_WINDOWS;
 	g_fOnWin95 = VerifyVersionInfo(&osvi, VER_PLATFORMID, VerSetConditionMask(0, VER_PLATFORMID, VER_GREATER_EQUAL));
 
-	
 	try {
 		g_hInstance = hinstance;
 		pch = GetCommandLine();
