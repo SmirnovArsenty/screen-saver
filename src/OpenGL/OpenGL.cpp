@@ -1,3 +1,5 @@
+#include "common.h"
+
 #include "OpenGL.h"
 #include <cassert>
 #include <vector>

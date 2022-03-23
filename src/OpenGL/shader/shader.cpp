@@ -1,3 +1,5 @@
+#include "common.h"
+
 #include <Windows.h>
 
 #include "OpenGL/OpenGL.h"

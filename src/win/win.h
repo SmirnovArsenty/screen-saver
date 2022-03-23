@@ -14,7 +14,7 @@ private:
 
 	bool m_is_closed{ false };
 public:
-	~win() = default;
+	~win();
 
 	void set_instance(HINSTANCE hInstance);
 	HINSTANCE instance();
