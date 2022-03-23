@@ -1,6 +1,5 @@
 .vs/
-./Debug/
-./Release/
+bin/
 
 *.tlog/
 *.obj
@@ -14,3 +13,4 @@
 *.ilk
 *.FileListAbsolute.txt
 *.user
+*.aps

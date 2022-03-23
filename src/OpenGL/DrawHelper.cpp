@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include "resources.h"
+#include "common.h"
 
 DrawHelper::DrawHelper(OpenGL* engine) : m_engine{ engine } {
 	GL_CHECK(glGenVertexArrays(1, &m_vao));
@@ -52,8 +53,13 @@ void DrawHelper::DrawLine(vec3 v1, vec3 v2) {
 }
 void DrawHelper::DrawScene() {
 	m_engine->clear();
-	GL_CHECK(glPointSize(m_point_size));
-	GL_CHECK(glLineWidth(m_line_width));
+	if (g_scrmode == ScrMode::smPreview) {
+		GL_CHECK(glPointSize(1.f));
+		GL_CHECK(glLineWidth(1.f));
+	} else {
+		GL_CHECK(glPointSize(m_point_size));
+		GL_CHECK(glLineWidth(m_line_width));
+	}
 
 	// use program
 	m_program->use();

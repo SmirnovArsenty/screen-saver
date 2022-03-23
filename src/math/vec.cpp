@@ -1,3 +1,5 @@
+#include "common.h"
+
 #include <cmath>
 #include "vec.h"
 

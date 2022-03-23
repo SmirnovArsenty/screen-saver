@@ -1,9 +1,14 @@
 #include "win.h"
+#include "common.h"
 #include <cassert>
 
 win::win() {}
 HINSTANCE win::instance() { return m_hInstance;  }
-void win::set_instance(HINSTANCE hInstance) { m_hInstance = hInstance;  }
+void win::set_instance(HINSTANCE hInstance) { m_hInstance = hInstance; }
+
+win::~win() {
+	deinit();
+}
 
 void win::init(HWND hWnd) {
 	assert(m_hWnd == nullptr);
@@ -12,17 +17,19 @@ void win::init(HWND hWnd) {
 	ShowWindow(m_hWnd, SW_SHOWNORMAL);
 	UpdateWindow(m_hWnd);
 
-	MONITORINFO monitor_info;
-	monitor_info.cbSize = sizeof(monitor_info);
-	GetMonitorInfo(MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST),
-		&monitor_info);
-	RECT window_rect(monitor_info.rcMonitor);
-	SetWindowPos(m_hWnd, NULL, window_rect.left, window_rect.top,
-		window_rect.right, window_rect.bottom,
-		SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+	if (g_scrmode == ScrMode::smSaver) {
+		MONITORINFO monitor_info;
+		monitor_info.cbSize = sizeof(monitor_info);
+		GetMonitorInfo(MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST),
+			&monitor_info);
+		RECT window_rect(monitor_info.rcMonitor);
+		SetWindowPos(m_hWnd, NULL, window_rect.left, window_rect.top,
+			window_rect.right, window_rect.bottom,
+			SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
 
-	SetCursorPos((window_rect.right - window_rect.left) / 2, (window_rect.bottom - window_rect.top) / 2);
-	ShowCursor(false);
+		SetCursorPos((window_rect.right - window_rect.left) / 2, (window_rect.bottom - window_rect.top) / 2);
+		ShowCursor(false);
+	}
 
 	m_openGL = new OpenGL(m_hWnd);
 	RECT rc;
@@ -33,6 +40,9 @@ void win::init(HWND hWnd) {
 }
 
 void win::deinit() {
+	if (m_is_closed) {
+		return;
+	}
 	delete m_openGL;
 	m_openGL = nullptr;
 	delete m_draw_helper;
