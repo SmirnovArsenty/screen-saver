@@ -188,9 +188,9 @@ static void doSaver(HWND pWndParent) {
 	HWND hWnd;
 	WNDCLASS wc;
 	PCSTR pszWindowTitle = "Tesseract";
-	UINT uExStyle = 0, uStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN;
+	UINT uExStyle, uStyle;
 
-	wc.style = CS_OWNDC | CS_DBLCLKS | CS_VREDRAW | CS_HREDRAW;
+	wc.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;
 	wc.lpfnWndProc = (WNDPROC)RealScreenSaverProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
@@ -209,11 +209,11 @@ static void doSaver(HWND pWndParent) {
 	
 	if (pWndParent != NULL) {
 		uStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN;
-		uExStyle = 0;
+		uExStyle = WS_EX_TOOLWINDOW;
 		pszWindowTitle = "Preview";
 	} else {
 		uStyle = WS_POPUP | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
-		uExStyle = WS_EX_TOPMOST;
+		uExStyle = WS_EX_TOPMOST | WS_EX_TOOLWINDOW;
 	}
 
 	if (!RegisterClass(&wc)) {
