@@ -47,9 +47,7 @@ LRESULT WINAPI ScreenSaverProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		win::g_win.init(hWnd);
 		return 0;
 	}
-	case WM_ERASEBKGND: {
-		return 0;
-	}
+	/*
 	case WM_PAINT: {
 		PAINTSTRUCT ps;
 		HDC hDC = BeginPaint(hWnd, &ps);
@@ -58,6 +56,7 @@ LRESULT WINAPI ScreenSaverProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		InvalidateRect(hWnd, NULL, true);
 		return 0;
 	}
+	*/
 	case WM_SIZE: {
 		win::g_win.resize(LOWORD(lParam), HIWORD(lParam));
 		return 0;
@@ -86,6 +85,7 @@ LRESULT WINAPI ScreenSaverProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		win::g_win.deinit();
 		return 0;
 	}
+	/*
 	case WM_TIMER: {
 		if (g_scrmode != ScrMode::smSaver) {
 			break;
@@ -100,6 +100,7 @@ LRESULT WINAPI ScreenSaverProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 			return 0;
 		}
 	}
+	*/
 	}
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
@@ -242,7 +243,7 @@ static void doSaver(HWND pWndParent) {
 		pWndParent, NULL, g_hInstance, NULL);
 
 	if (hWnd) {
-		SetTimer(hWnd, 0x71334, 1, nullptr);
+		//SetTimer(hWnd, 0x71334, 1, nullptr);
 
 		if (g_scrmode != ScrMode::smPreview) {
 			SetForegroundWindow(hWnd);
@@ -263,7 +264,7 @@ static void doSaver(HWND pWndParent) {
 				EndPaint(pWndParent ? pWndParent : hWnd, &ps);
 			}
 		}
-		KillTimer(hWnd, 0x71334);
+		//KillTimer(hWnd, 0x71334);
 	}
 
 	hogMachine(FALSE);

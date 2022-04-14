@@ -100,7 +100,7 @@ OpenGL::OpenGL(HWND hWnd) {
 		m_error_flag = true;
 	}
 
-	wglSwapIntervalEXT(0);
+	//wglSwapIntervalEXT(0);
 
 	GL_CHECK(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
 
