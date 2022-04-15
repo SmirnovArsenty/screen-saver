@@ -1,7 +1,7 @@
 #include "common.h"
 
-#include <cmath>
 #include "vec.h"
+#include <cmath>
 
 vec3::vec3(float x, float y, float z) : m_x{ x }, m_y{ y }, m_z{ z } {}
 vec3::vec3(float x) : m_x{ x }, m_y{ x }, m_z{ x } {}

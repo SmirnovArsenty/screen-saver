@@ -1,5 +1,6 @@
-#include "win.h"
 #include "common.h"
+
+#include "win.h"
 #include <cassert>
 
 win::win() {}
