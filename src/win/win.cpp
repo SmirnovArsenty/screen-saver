@@ -18,16 +18,15 @@ void win::init(HWND hWnd) {
 	UpdateWindow(m_hWnd);
 
 	if (g_scrmode == ScrMode::smSaver) {
-		MONITORINFO monitor_info;
-		monitor_info.cbSize = sizeof(monitor_info);
-		GetMonitorInfo(MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST),
-			&monitor_info);
-		RECT window_rect(monitor_info.rcMonitor);
-		SetWindowPos(m_hWnd, NULL, window_rect.left, window_rect.top,
-			window_rect.right, window_rect.bottom,
-			SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
-
-		SetCursorPos((window_rect.right - window_rect.left) / 2, (window_rect.bottom - window_rect.top) / 2);
+		// MONITORINFO monitor_info;
+		// monitor_info.cbSize = sizeof(monitor_info);
+		// GetMonitorInfo(MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST),
+		// 	&monitor_info);
+		// RECT window_rect(monitor_info.rcMonitor);
+		// SetWindowPos(m_hWnd, NULL, window_rect.left, window_rect.top,
+		// 	window_rect.right, window_rect.bottom,
+		// 	SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+		// SetCursorPos((window_rect.right - window_rect.left) / 2, (window_rect.bottom - window_rect.top) / 2);
 		ShowCursor(false);
 	}
 

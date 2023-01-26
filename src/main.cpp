@@ -72,9 +72,17 @@ LRESULT WINAPI ScreenSaverProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		int32_t x = LOWORD(lParam);
 		int32_t y = HIWORD(lParam);
 		RECT rc;
-		GetWindowRect(hWnd, &rc);
-		if (x * 2 != (rc.right - rc.left) || y * 2 != (rc.bottom - rc.top)) {
-			win::g_win.deinit();
+		static std::pair<int32_t, int32_t> prev_mouse{ 0, 0 };
+		if (prev_mouse.first == 0 && prev_mouse.second == 0) // init
+		{
+			prev_mouse.first = x;
+			prev_mouse.second = y;
+		}
+		else
+		{
+			if (prev_mouse.first != x || prev_mouse.second != y) {
+				win::g_win.deinit();
+			}
 		}
 		return 0;
 	}
