@@ -29,9 +29,6 @@ private:
 
 	GLuint m_vao{};
 	GLuint m_vbo{};
-	GLuint m_framebuffer{};
-	GLuint m_rendertarget{};
-	shader* m_swapbuf_program{ nullptr };
 
 	bool m_error_flag{ false };
 

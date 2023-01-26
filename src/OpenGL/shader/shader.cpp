@@ -18,29 +18,15 @@ shader::shader(int32_t vsID, int32_t fsID) {
 
 	{
 		const char* vs_source = nullptr;
-		if (vsID == IDS_SHADER_BLIT_VS) {
-			vs_source = R"(#version 430
-
-in vec2 in_Position;
-
-out vec2 o_TexCoord;
-
-void main(void) {
-	gl_Position = vec4(in_Position.x, in_Position.y, 0.0, 1.0);
-	o_TexCoord.x = (in_Position.x + 1.0) * 0.5;
-	o_TexCoord.y = (in_Position.y + 1.0) * 0.5;
-}
-)";
-		} else if (vsID == IDS_SHADER_DEFAULT_VS) {
+		if (vsID == IDS_SHADER_DEFAULT_VS) {
 			vs_source = R"(#version 430
 
 in vec3 in_Position;
-
-uniform mat4 view;
-uniform mat4 projection;
+out vec2 o_pos;
 
 void main(void) {
-	gl_Position = projection * view * vec4(in_Position, 1.0);
+	gl_Position = vec4(in_Position.xyz, 1.0);
+	o_pos = gl_Position.xy;
 }
 )";
 		}
@@ -49,38 +35,23 @@ void main(void) {
 
 	{
 		const char* fs_source = nullptr;
-		if (fsID == IDS_SHADER_BLIT_FS) {
+		if (fsID == IDS_SHADER_DEFAULT_FS) {
 			fs_source = R"(#version 430
 
-in vec2 in_TexCoord;
+in vec2 o_pos;
 out vec4 o_Color;
 
-uniform sampler2DMS screenTex;
-uniform vec2 screenSize;
+uniform float time;
 
 void main(void) {
-	o_Color = texelFetch(screenTex, ivec2(gl_FragCoord), 0);
-	o_Color += texelFetch(screenTex, ivec2(gl_FragCoord), 1);
-	o_Color += texelFetch(screenTex, ivec2(gl_FragCoord), 2);
-	o_Color += texelFetch(screenTex, ivec2(gl_FragCoord), 3);
-	o_Color.r = o_Color.r / 4;
-	o_Color.g = o_Color.g / 4;
-	o_Color.b = o_Color.b / 4;
-	o_Color.a = o_Color.a / 4;
-}
-)";
-		} else if (fsID == IDS_SHADER_DEFAULT_FS) {
-			fs_source = R"(#version 430
-
-out vec4 o_Color;
-
-uniform vec2 screen_size;
-
-void main(void) {
-	vec2 coord;
-	coord.x = gl_FragCoord.x / screen_size.x;
-	coord.y = gl_FragCoord.y / screen_size.y;
-	o_Color = vec4(coord.x, coord.y, 1 - (coord.x + coord.y) / 2,1.0);
+	float time_scale = time * 0.0005;
+	vec2 pos_x = o_pos + vec2(1, 1) * sin(time_scale * 1.72);
+	vec2 pos_y = o_pos + vec2(1, 1) * cos(time_scale * 0.36);
+	vec2 pos_z = o_pos + vec2(1, 1) * cos(time_scale * 0.57) * sin(time_scale * 1.23);
+	o_Color = vec4(abs(pos_x.x * 1.3 * sin(time_scale * 0.89) - pos_x.y * 0.2 * sin(time_scale * 1.13)) + 0.2,
+					abs(pos_y.x * 0.5 * sin(time_scale * 0.47) - pos_y.y * 0.4 * sin(time_scale * 1.43)) + 0.2,
+					abs(pos_z.x * 0.8 * sin(time_scale * 1.32) - pos_z.y * 1.5 * sin(time_scale * 0.93)) + 0.2,
+					1.0);
 }
 )";
 		}

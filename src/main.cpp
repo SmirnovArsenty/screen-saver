@@ -121,8 +121,9 @@ LRESULT WINAPI DefScreenSaverProc(HWND hwnd, UINT iMsg, WPARAM wparam, LPARAM lp
 		switch (iMsg)
 		{
 		case WM_ACTIVATEAPP:
-			if (wparam == FALSE)
+			if (wparam == FALSE) {
 				PostMessage(hwnd, WM_CLOSE, 0, 0);
+			}
 			break;
 		case WM_CLOSE:
 			if (!g_fOnWin95)
@@ -226,7 +227,6 @@ static void doSaver(HWND pWndParent) {
 	}
 	hogMachine(TRUE);
 
-	
 	RECT rc;
 	if (pWndParent) {
 		GetClientRect(pWndParent, &rc);
