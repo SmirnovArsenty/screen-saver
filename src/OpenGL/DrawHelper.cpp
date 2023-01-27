@@ -27,7 +27,9 @@ void DrawHelper::DrawScene() {
 	// use program
 	m_program->use();
 
-	GL_CHECK(glUniform1f(m_program->getUniformLocation("time"), float(clock())));
+	float time = (std::chrono::high_resolution_clock::now().time_since_epoch().count()) / 1e6;
+	OutputDebugString(("Time: " + std::to_string(time) + "\n").c_str());
+	GL_CHECK(glUniform1f(m_program->getUniformLocation("time"), time));
 
 	GL_CHECK(glBindVertexArray(m_vao));
 	GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
