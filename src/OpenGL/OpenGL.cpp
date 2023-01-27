@@ -100,7 +100,7 @@ OpenGL::OpenGL(HWND hWnd) {
 		m_error_flag = true;
 	}
 
-	//wglSwapIntervalEXT(0);
+	// wglSwapIntervalEXT(1);
 
 	GL_CHECK(glClearColor(0.0f, 0.0f, 0.0f, 0.0f));
 
@@ -138,7 +138,6 @@ void OpenGL::SwapBuffers(HDC hDC) {
 	static int32_t fps = 0;
 	++fps;
 	auto now = std::chrono::high_resolution_clock::now();
-
 	if (now - last_time_fps > std::chrono::seconds(1)) {
 		last_time_fps = now;
 		OutputDebugStringA(("FPS: " + std::to_string(fps) + "\n").c_str());

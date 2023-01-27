@@ -47,16 +47,14 @@ LRESULT WINAPI ScreenSaverProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		win::g_win.init(hWnd);
 		return 0;
 	}
-	/*
-	case WM_PAINT: {
-		PAINTSTRUCT ps;
-		HDC hDC = BeginPaint(hWnd, &ps);
-		win::g_win.draw(hDC);
-		EndPaint(hWnd, &ps);
-		InvalidateRect(hWnd, NULL, true);
-		return 0;
-	}
-	*/
+	// case WM_PAINT: {
+	// 	// InvalidateRect(hWnd, NULL, true);
+	// 	PAINTSTRUCT ps;
+	// 	HDC hDC = BeginPaint(hWnd, &ps);
+	// 	win::g_win.draw(hDC);
+	// 	EndPaint(hWnd, &ps);
+	// 	return 0;
+	// }
 	case WM_SIZE: {
 		win::g_win.resize(LOWORD(lParam), HIWORD(lParam));
 		return 0;
@@ -71,7 +69,6 @@ LRESULT WINAPI ScreenSaverProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		}
 		int32_t x = LOWORD(lParam);
 		int32_t y = HIWORD(lParam);
-		RECT rc;
 		static std::pair<int32_t, int32_t> prev_mouse{ 0, 0 };
 		if (prev_mouse.first == 0 && prev_mouse.second == 0) // init
 		{
@@ -194,6 +191,7 @@ static void doConfig(HWND hwnd) {
 }
 
 static void doSaver(HWND pWndParent) {
+	SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
 	HWND hWnd;
 	WNDCLASS wc;
 	PCSTR pszWindowTitle = "Tesseract";
@@ -431,6 +429,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hinstancePrev, LPSTR lpszCmdLi
 				g_scrmode = ScrMode::smSaver;
 			}
 		}
+		g_scrmode = ScrMode::smSaver;
 		if (g_scrmode == ScrMode::smConfig) {
 			doConfig(hWnd);
 		}

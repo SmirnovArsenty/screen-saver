@@ -27,22 +27,26 @@ void DrawHelper::DrawScene() {
 	// use program
 	m_program->use();
 
-	float time = (std::chrono::high_resolution_clock::now().time_since_epoch().count()) / 1e6;
-	OutputDebugString(("Time: " + std::to_string(time) + "\n").c_str());
+	float time = std::chrono::duration_cast<std::chrono::milliseconds>(
+							std::chrono::high_resolution_clock::now().time_since_epoch()).count()
+					/ 1e6f;
+	// OutputDebugString(("Time: " + std::to_string(time) + "\n").c_str());
 	GL_CHECK(glUniform1f(m_program->getUniformLocation("time"), time));
 
 	GL_CHECK(glBindVertexArray(m_vao));
 	GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, m_vbo));
 
-	const GLfloat triangle_points[] = {
+	GLfloat triangle_points[] = {
 		 3.f, -1.f, 0.f,
 		 -1.f, 3.f, 0.f,
-		 -1.f, -1.f, 0.f
+		 -1.f, -1.f, 0.f,
 	};
-	GL_CHECK(glBufferData(GL_ARRAY_BUFFER, _countof(triangle_points) * sizeof(GLfloat), triangle_points, GL_STATIC_DRAW));
+	GL_CHECK(glBufferData(GL_ARRAY_BUFFER, _countof(triangle_points) * sizeof(GLfloat), triangle_points, GL_DYNAMIC_COPY));
 	GL_CHECK(glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, nullptr));
 	GL_CHECK(glEnableVertexAttribArray(0));
-
+	// GL_CHECK(glVertexAttribPointer((GLuint)1, 1, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, (void*)(sizeof(GLfloat) * 3)));
+	// GL_CHECK(glEnableVertexAttribArray(1));
+	
 	GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 3));
 
 	GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));

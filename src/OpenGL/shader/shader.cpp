@@ -21,7 +21,8 @@ shader::shader(int32_t vsID, int32_t fsID) {
 		if (vsID == IDS_SHADER_DEFAULT_VS) {
 			vs_source = R"(#version 430
 
-in vec3 in_Position;
+layout(location = 0) in vec3 in_Position;
+
 out vec2 o_pos;
 
 void main(void) {
@@ -39,12 +40,13 @@ void main(void) {
 			fs_source = R"(#version 430
 
 in vec2 o_pos;
-out vec4 o_Color;
 
 uniform float time;
+out vec4 o_Color;
 
-void main(void) {
-	float time_scale = time * 0.0005;
+void main(void)
+{
+	float time_scale = time * 100;
 	vec2 pos_x = o_pos + vec2(1, 1) * sin(time_scale * 1.72);
 	vec2 pos_y = o_pos + vec2(1, 1) * cos(time_scale * 0.36);
 	vec2 pos_z = o_pos + vec2(1, 1) * cos(time_scale * 0.57) * sin(time_scale * 1.23);
@@ -91,6 +93,9 @@ void main(void) {
 	GL_CHECK(glDetachShader(m_program, fragment_shader));
 	GL_CHECK(glDeleteShader(vertex_shader));
 	GL_CHECK(glDeleteShader(fragment_shader));
+
+	GL_CHECK(glBindAttribLocation(m_program, 0, "in_Position"));
+	GL_CHECK(glBindAttribLocation(m_program, 1, "in_Time"));
 }
 
 shader::~shader() {
