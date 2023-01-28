@@ -11,7 +11,7 @@ How to install:
 Faced troubles:
 1) .scr extention bound by some application
     Solution: remove bind using regedit tool
-    go to "HKEY_CLASSES_ROOT\.scr"
+    go to "HKEY_CLASSES_ROOT\\.scr"
     set default data to "scrfile"
 2) vcruntime140.dll not found
     Solution: needed to install Microsoft Visual C++ Redistributable (2015 or higher)
