@@ -55,7 +55,9 @@ void win::draw(HDC hDC) {
 	if (m_openGL == nullptr) {
 		return;
 	}
-	m_draw_helper->DrawScene();
+	RECT rc;
+	GetWindowRect(m_hWnd, &rc);
+	m_draw_helper->DrawScene(rc.right - rc.left, rc.bottom - rc.top);
 	m_openGL->SwapBuffers(hDC);
 }
 

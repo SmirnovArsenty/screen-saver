@@ -16,5 +16,5 @@ public:
 	DrawHelper(OpenGL* engine);
 	~DrawHelper();
 
-	void DrawScene();
+	void DrawScene(int32_t w, int32_t h);
 };
