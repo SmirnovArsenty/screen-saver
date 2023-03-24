@@ -72,16 +72,17 @@ out vec4 o_Color;
 void main(void)
 {
 	float time_scale = time;
-	vec2 pos_x = g_pos + vec2(1, 1) * sin(time_scale * 1.72);
-	vec2 pos_y = g_pos + vec2(1, 1) * cos(time_scale * 0.36);
-	vec2 pos_z = g_pos + vec2(1, 1) * cos(time_scale * 0.57);
+	vec2 pos_x = g_pos + vec2(1, 1) * sin(time_scale * 1.32 + 13) * cos(time_scale * 0.83 + 16);
+	vec2 pos_y = g_pos + vec2(1, 1) * sin(time_scale * 0.36 + 14) * cos(time_scale * 1.56 + 17);
+	vec2 pos_z = g_pos + vec2(1, 1) * sin(time_scale * 0.57 + 15) * cos(time_scale * 1.33 + 18);
 
 	vec3 color;
-	color.r = clamp(pos_x.x * 1.3 * sin(time_scale * 0.89) + pos_x.y * 0.2 * sin(time_scale * 1.13), 0.0, 1.0);
-	color.g = clamp(pos_y.x * 0.5 * sin(time_scale * 0.47) + pos_y.y * 0.4 * sin(time_scale * 1.43), 0.0, 1.0);
-	color.b = clamp(pos_z.x * 0.8 * sin(time_scale * 1.32) + pos_z.y * 1.5 * sin(time_scale * 0.93), 0.0, 1.0);
+	color.r = abs(pos_x.x * 1.3 * sin(time_scale * 0.89 + 1) * cos(time_scale * 1.23 + 4)) + abs(pos_x.y * 0.7 * sin(time_scale * 1.13 + 7) * cos(time_scale * 0.86 + 10));
+	color.g = abs(pos_y.x * 0.5 * sin(time_scale * 0.47 + 2) * cos(time_scale * 0.97 + 5)) + abs(pos_y.y * 0.4 * sin(time_scale * 1.43 + 8) * cos(time_scale * 0.75 + 11));
+	color.b = abs(pos_z.x * 0.8 * sin(time_scale * 1.32 + 3) * cos(time_scale * 0.73 + 6)) + abs(pos_z.y * 1.5 * sin(time_scale * 0.93 + 9) * cos(time_scale * 1.27 + 12));
 
-	o_Color = vec4(color + vec3(0.2), 1.0);
+	color = pow(color, vec3(1/1.22));
+	o_Color = vec4(color, 1.0);
 }
 )";
 		}

@@ -29,7 +29,7 @@ void DrawHelper::DrawScene(int32_t w, int32_t h) {
 	m_program->use();
 
 	float time = clock() / 1e4f;
-	OutputDebugString(("Time: " + std::to_string(time) + "\n").c_str());
+	// OutputDebugString(("Time: " + std::to_string(time) + "\n").c_str());
 	GL_CHECK(glUniform1f(m_program->getUniformLocation("time"), time));
 
 	GL_CHECK(glBindVertexArray(m_vao));
