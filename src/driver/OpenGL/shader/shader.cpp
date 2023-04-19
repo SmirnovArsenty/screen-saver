@@ -2,7 +2,6 @@
 
 #include <Windows.h>
 
-#include "OpenGL/OpenGL.h"
 #include "shader.h"
 
 #include <fstream>

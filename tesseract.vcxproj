@@ -172,22 +172,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\driver\D3D11\d3d11_driver.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\matrix.cpp" />
     <ClCompile Include="src\math\vec.cpp" />
-    <ClCompile Include="src\OpenGL\DrawHelper.cpp" />
-    <ClCompile Include="src\OpenGL\OpenGL.cpp" />
-    <ClCompile Include="src\OpenGL\shader\shader.cpp" />
     <ClCompile Include="src\win\win.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\driver\D3D11\d3d11_driver.h" />
     <ClInclude Include="src\math\matrix.h" />
     <ClInclude Include="src\math\vec.h" />
-    <ClInclude Include="src\OpenGL\DrawHelper.h" />
-    <ClInclude Include="src\OpenGL\OpenGL.h" />
-    <ClInclude Include="src\OpenGL\shader\shader.h" />
     <ClInclude Include="src\resources.h" />
     <ClInclude Include="src\win\win.h" />
   </ItemGroup>

@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <powrprof.h>
 #include <ScrnSave.h>
+#include <algorithm>
 
 #include "win/win.h"
 #include "resource.h"

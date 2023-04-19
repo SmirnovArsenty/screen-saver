@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Windows.h"
-#include "OpenGL/DrawHelper.h"
+#include "driver/D3D11/d3d11_driver.h"
 
 class win {
 private:
@@ -9,8 +9,7 @@ private:
 
 	HINSTANCE m_hInstance{ nullptr };
 	HWND m_hWnd{ nullptr };
-	OpenGL* m_openGL{ nullptr };
-	DrawHelper* m_draw_helper{ nullptr };
+	D3D11Driver* m_d3d11{ nullptr };
 
 	bool m_is_closed{ false };
 public:
@@ -23,7 +22,7 @@ public:
 	void deinit();
 
 	void draw(HDC hDC);
-	void resize(GLint w, GLint h);
+	void resize(uint32_t w, uint32_t h);
 
 	bool is_closed();
 

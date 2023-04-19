@@ -14,6 +14,8 @@ void win::init(HWND hWnd) {
 	assert(m_hWnd == nullptr);
 	m_hWnd = hWnd;
 
+	m_d3d11 = new D3D11Driver(m_hWnd);
+
 	ShowWindow(m_hWnd, SW_SHOWNORMAL);
 	UpdateWindow(m_hWnd);
 
@@ -30,40 +32,33 @@ void win::init(HWND hWnd) {
 		ShowCursor(false);
 	}
 
-	m_openGL = new OpenGL(m_hWnd);
 	RECT rc;
 	GetWindowRect(hWnd, &rc);
 	m_is_closed = false;
-	m_openGL->resize(rc.right - rc.left, rc.bottom - rc.top);
-	m_draw_helper = new DrawHelper(m_openGL);
+	m_d3d11->resize(rc.right - rc.left, rc.bottom - rc.top);
 }
 
 void win::deinit() {
 	if (m_is_closed) {
 		return;
 	}
-	delete m_openGL;
-	m_openGL = nullptr;
-	delete m_draw_helper;
-	m_draw_helper = nullptr;
+	delete m_d3d11;
+	m_d3d11 = nullptr;
 	m_is_closed = true;
 	DestroyWindow(m_hWnd);
 	m_hWnd = nullptr;
 }
 
 void win::draw(HDC hDC) {
-	if (m_openGL == nullptr) {
+	if (m_d3d11 == nullptr) {
 		return;
 	}
-	RECT rc;
-	GetWindowRect(m_hWnd, &rc);
-	m_draw_helper->DrawScene(rc.right - rc.left, rc.bottom - rc.top);
-	m_openGL->SwapBuffers(hDC);
+	m_d3d11->draw();
 }
 
-void win::resize(GLint w, GLint h) {
-	if (m_openGL != nullptr) {
-		m_openGL->resize(w, h);
+void win::resize(uint32_t w, uint32_t h) {
+	if (m_d3d11 != nullptr) {
+		m_d3d11->resize(w, h);
 	}
 }
 

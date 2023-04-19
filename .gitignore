@@ -14,3 +14,6 @@ bin/
 *.FileListAbsolute.txt
 *.user
 *.aps
+
+*.vcxproj.filters
+*.vcxproj.user
